@@ -8,6 +8,8 @@
 //#include "Interface/ProxyInterface.h"
 //引入RunnableThread
 #include "Runnable/ThreadRunnableProxy.h"
+//#include "Core/SimpleThreadType.h"
+
 
 class SIMPLETHREAD_API FThreadManagement : public TSharedFromThis<FThreadManagement>
 {
@@ -21,7 +23,22 @@ public:
 public:
 	//添加模板方法
 	template<class UserClass , typename... VarTypes>
-	FThreadHandle CreateThreadRaw(UserClass* TargetClass, typename TMemFunPtrType<false , UserClass , void(VarTypes...)>::Type InMethod , VarTypes... Vars);
+	FThreadHandle CreateThreadRaw(UserClass* TargetClass, typename TMemFunPtrType<false, UserClass, void(VarTypes...)>::Type InMethod, VarTypes... Vars)
+	{
+		TSharedPtr<IThreadProxy> ThreadProxy = MakeShareable(new FThreadRunnable);
+		ThreadProxy->GetThreadDelegate().BindRaw(TargetClass, InMethod, Vars ..);
+
+		//调用更新线程池的方法
+		return UpdateThreadPool(ThreadProxy);
+	};
+	
+
+	//声明创建线程方法
+	/*FThreadHandle CreateThread( const FThreadLambda &ThreadLamada);*/
+
+protected:
+	//更新线程池
+	FThreadHandle UpdateThreadPool(TSharedPtr<IThreadProxy> ThreadProxy);
 
 private:
 	//建立线程池
@@ -32,11 +49,13 @@ private:
 	static TSharedPtr<FThreadManagement> ThreadManagement;
 };
 
-//实现创建线程
-template<class UserClass, typename ...VarTypes>
-inline FThreadHandle FThreadManagement::CreateThreadRaw(UserClass* TargetClass, typename TMemFunPtrType<false, UserClass, void(VarTypes...)>::Type InMethod, VarTypes ...Vars)
-{
-	TSharedPtr<IThreadProxy> ThreadProxy = MakeSharedable(new FThreadRunnable);
-	ThreadProxy->GetThreadDelegate().BindRaw( TargetClass , InMethod , Vars ..);
-	return FThreadHandle();
-}
+////实现创建线程
+//template<class UserClass, typename ...VarTypes>
+//inline FThreadHandle FThreadManagement::CreateThreadRaw(UserClass* TargetClass, typename TMemFunPtrType<false, UserClass, void(VarTypes...)>::Type InMethod, VarTypes ...Vars)
+//{
+//	TSharedPtr<IThreadProxy> ThreadProxy = MakeShareable(new FThreadRunnable);
+//	ThreadProxy->GetThreadDelegate().BindRaw(TargetClass, InMethod, Vars ..);
+//
+//	//调用更新线程池的方法
+//	return UpdateThreadPool(ThreadProxy);
+//};

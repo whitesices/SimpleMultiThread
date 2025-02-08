@@ -12,7 +12,7 @@
 //初始化
 int32 FThreadRunnable::ThreadCount = 0;
 
-FThreadRunnable::FThreadRunnable():IThreadProxy(),bRun(false),bSuspend(false),Thread(nullptr),ThreadEvent( FPlatformProcess::GetSynchEventFromPool())
+FThreadRunnable::FThreadRunnable():IThreadProxy(),bRun(false),bSuspend(false),Thread(nullptr),ThreadEvent( FPlatformProcess::GetSynchEventFromPool() )
 {
 }
 
@@ -40,7 +40,7 @@ void FThreadRunnable::CreateSafeThread()
 	ThreadCount++;
 }
 
-void FThreadRunnable::Suspend()
+void FThreadRunnable::SuspendThread()
 {
 	bSuspend = true;
 }
@@ -51,7 +51,7 @@ void FThreadRunnable::WakeupThread()
 	ThreadEvent->Trigger();
 }
 
-bool FThreadRunnable::init()
+bool FThreadRunnable::Init()
 {
 	//判断当前平台是否支持多线程
 	if (!FPlatformProcess::SupportsMultithreading())
@@ -69,6 +69,7 @@ bool FThreadRunnable::init()
 
 uint32 FThreadRunnable::Run()
 {
+
 	//判断是否可以运行在判断是否可以挂起
 	while (bRun)
 	{
@@ -97,9 +98,11 @@ uint32 FThreadRunnable::Run()
 
 void FThreadRunnable::Stop()
 {
+
 }
 
 void FThreadRunnable::Exit()
 {
+
 	bRun = false;
 }

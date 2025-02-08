@@ -1,5 +1,5 @@
 #include "ThreadManager.h"
-
+//#include "Runnable/ThreadRunnableProxy.h"
 //初始化
 TSharedPtr<FThreadManagement> FThreadManagement::ThreadManagement = nullptr;
 
@@ -23,4 +23,24 @@ void FThreadManagement::Destroy()
 		//置空
 		ThreadManagement = nullptr;
 	}
+}
+
+//FThreadHandle FThreadManagement::CreateThread(const FThreadLambda& ThreadLamada)
+//{
+//	//FThreadRunnable* TR = nullptr;
+//	TSharedPtr<IThreadProxy> ThreadProxy = MakeShareable(new FThreadRunnable);
+//	ThreadProxy->GetThreadLambda() = ThreadLamada;
+//	//调用更新线程池的方法
+//	return UpdateThreadPool(ThreadProxy);
+//}
+
+FThreadHandle FThreadManagement::UpdateThreadPool(TSharedPtr<IThreadProxy> ThreadProxy)
+{
+	ThreadProxy->CreateSafeThread();
+
+	//池化线程
+	Pool.Add(ThreadProxy);
+
+	//返回线程句柄
+	return ThreadProxy->GetThreadHandle();
 }

@@ -22,23 +22,23 @@ public:
 	virtual void CreateSafeThread();
 
 	//重写挂起函数
-	virtual void Suspend();
+	virtual void SuspendThread();
 
 	//重写唤醒函数
 	virtual void WakeupThread();
 
 private:
 	//重写Runnable的初始化函数
-	virtual bool init();
+	virtual bool Init() ;
 
 	//重写Runabble的Run函数
-	virtual uint32 Run();
+	virtual uint32 Run() ;
 
 	//重写Runnable的Stop函数
-	virtual void Stop();
+	virtual void Stop() ;
 
 	//重写Runnable的Exit函数
-	virtual void Exit();
+	virtual void Exit() ;
 
 private:
 	//加入布尔变量判断当前线程是否执行

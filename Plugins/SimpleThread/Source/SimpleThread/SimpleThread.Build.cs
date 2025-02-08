@@ -25,7 +25,7 @@ public class SimpleThread : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-                "Core", "CoreUObject", "Engine", "InputCore"
+                "Core"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
